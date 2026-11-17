@@ -112,6 +112,7 @@ Fachlogik und Oberfläche sind getrennt: Alles, was rechnet, liegt im reinen Dar
 ```
 coach_app/
 ├── CLAUDE.md
+├── l10n.yaml                          ← Konfiguration der ARB-Generierung (Vorlage: Deutsch)
 ├── docs/
 │   ├── PRODUCT_SHEET.md
 │   ├── BUILD_SHEET.md
@@ -138,7 +139,7 @@ coach_app/
 │   ├── features/
 │   │   ├── today/  training/  meals/  data/  onboarding/  settings/
 │   ├── shared/design/                 (Tokens, Komponenten)
-│   └── l10n/                          (app_de.arb, app_en.arb)
+│   └── l10n/                          (app_de.arb, app_en.arb, daraus generiert app_localizations*.dart)
 ├── assets/
 │   ├── config/  (coach_config.json, goal_profiles.json, nutrition_config.json)
 │   ├── strength_exercises.json
