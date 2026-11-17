@@ -1,0 +1,12 @@
+{
+  "@@locale": "en",
+  "appTitle": "Coach",
+  "tabToday": "Today",
+  "tabTraining": "Training",
+  "tabMeals": "Food",
+  "tabData": "Data",
+  "todayPlaceholder": "Your suggestion for today will appear here soon.",
+  "trainingPlaceholder": "Your training week and goal will appear here soon.",
+  "mealsPlaceholder": "Your weekly meal plan will appear here soon.",
+  "dataPlaceholder": "You will soon be able to view your Garmin data here."
+}

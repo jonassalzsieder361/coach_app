@@ -1,0 +1,21 @@
+{
+  "@@locale": "de",
+  "appTitle": "Coach",
+  "@appTitle": { "description": "Name der App" },
+  "tabToday": "Heute",
+  "@tabToday": { "description": "Tab mit dem Vorschlag für heute" },
+  "tabTraining": "Training",
+  "@tabTraining": { "description": "Tab mit Wochenplan und Zielen" },
+  "tabMeals": "Essen",
+  "@tabMeals": { "description": "Tab mit dem Essensplan" },
+  "tabData": "Daten",
+  "@tabData": { "description": "Tab mit den Garmin-Daten" },
+  "todayPlaceholder": "Hier siehst du bald deinen Vorschlag für heute.",
+  "@todayPlaceholder": { "description": "Platzhalter im Tab Heute" },
+  "trainingPlaceholder": "Hier findest du bald deine Trainingswoche und dein Ziel.",
+  "@trainingPlaceholder": { "description": "Platzhalter im Tab Training" },
+  "mealsPlaceholder": "Hier entsteht bald dein Essensplan für die Woche.",
+  "@mealsPlaceholder": { "description": "Platzhalter im Tab Essen" },
+  "dataPlaceholder": "Hier kannst du bald deine Garmin-Daten ansehen.",
+  "@dataPlaceholder": { "description": "Platzhalter im Tab Daten" }
+}
