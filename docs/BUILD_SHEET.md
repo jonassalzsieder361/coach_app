@@ -25,30 +25,28 @@ Dieses Build Sheet führt Schritt für Schritt vom leeren Repo zur fertigen Coac
 | Meilenstein 3 | Essensplan | Wochenplan mit Einkaufsliste |
 | Alltag | iPhone-Installation, 4 Wochen Nutzung | Schwellen nachjustiert |
 
+**Wo:** Entwickelt, gebaut und getestet wird auf dem MacBook (Claude Code, Flutter, Xcode). Bis zum 17.11.2026 war Windows für die Entwicklung vorgesehen, Schritt 0 ist dort einmal gelaufen.
+
 **Wer macht was:** Claude Code schreibt Code, Tests und Specs. Du gibst Pläne frei, führst Garmin-Skripte mit deinem Key aus, testest auf dem iPhone und prüfst Texte.
 
 ## Voraussetzungen
 
 Das meiste ist durch die nola-Garmin-Integration schon da. Haken setzen, was steht.
 
-**Windows (Entwicklung)**
-
-- [ ] Flutter ≥ 3.44 unter `C:\Users\jonas\dev\flutter`, im PATH (`flutter --version` in einem **neuen** Terminal)
-- [ ] Git und GitHub-Zugang
-- [ ] Claude Code (`claude` startet)
-- [ ] Editor zum Mitlesen, z. B. VS Code mit Flutter-Erweiterung
-
-**MacBook (Bauen und Installieren)**
+**MacBook (Entwicklung, Bauen, Installieren)**
 
 - [ ] Xcode mit iOS-Plattform, `sudo xcodebuild -runFirstLaunch` ausgeführt
-- [ ] Flutter ≥ 3.44 und CocoaPods
+- [ ] Flutter ≥ 3.44 im PATH (`flutter --version` in einem **neuen** Terminal-Fenster) und CocoaPods
 - [ ] `flutter doctor` zeigt bei Flutter und Xcode einen Haken
+- [ ] Git und GitHub CLI: `brew install gh`, dann `gh auth login` (GitHub.com, HTTPS, Login im Browser)
+- [ ] Claude Code (`claude` startet)
+- [ ] Editor zum Mitlesen, z. B. VS Code mit Flutter-Erweiterung
 
 **Konten**
 
 - [ ] Garmin Personal API Key (in Garmin Connect, 1 Jahr Laufzeit), gespeichert im Passwortmanager
 - [ ] Apple Developer Program (99 € pro Jahr) empfohlen, sonst läuft die App nur 7 Tage
-- [ ] Privates GitHub-Repo für die neue App
+- [x] Privates GitHub-Repo: `jonassalzsieder361/coach_app`
 
 **Entscheidungen vor dem Start** (aus dem Product Sheet)
 
@@ -59,36 +57,30 @@ Das meiste ist durch die nola-Garmin-Integration schon da. Haken setzen, was ste
 
 **Ziel:** Ein leeres Flutter-Projekt mit Paketen, Ordnerstruktur und Regeln, das auf dem Mac im iOS-Simulator startet.
 
-**0a. Ordner und Doku (du, in PowerShell)**
+**0a. Repo auf den Mac holen (du, im Terminal)**
 
-```powershell
-mkdir C:\Users\jonas\Projekte\coach_app
-cd C:\Users\jonas\Projekte\coach_app
-git init -b main
-mkdir docs
+Das Repo mit `CLAUDE.md` und `docs/` liegt schon auf GitHub (erster Commit auf `main`).
+
+```bash
+mkdir -p ~/Projekte && cd ~/Projekte
+git clone https://github.com/jonassalzsieder361/coach_app.git
+cd coach_app
+ls            # CLAUDE.md und docs
+gh repo view  # prüft die GitHub-Anmeldung
 ```
 
-- Das Product Sheet und dieses Build Sheet als Markdown exportieren und als `docs/PRODUCT_SHEET.md` und `docs/BUILD_SHEET.md` ablegen.
-- Die `CLAUDE.md` aus dem Abschnitt weiter unten ins Hauptverzeichnis legen.
-- Auf GitHub ein **privates** Repo anlegen (z. B. `coach_app`), dann:
+Auf GitHub unter Settings → Branches für `main` „Require a pull request before merging“ einschalten, falls noch nicht geschehen.
 
-```powershell
-git add CLAUDE.md docs
-git commit -m "docs: Product Sheet, Build Sheet und Regeln"
-git remote add origin https://github.com/<dein-konto>/coach_app.git
-git push -u origin main
-```
-
-Dieser erste Commit ist der einzige, der direkt auf `main` landet. Danach auf GitHub unter Settings → Branches für `main` „Require a pull request before merging“ einschalten.
+Ganz neues Repo statt Klon: `git init -b main`, `CLAUDE.md` und `docs/` hineinlegen, committen, dann `gh repo create coach_app --private --source . --push`. Das ist der einzige Commit direkt auf `main`.
 
 **0b. Projekt-Setup (Claude Code)**
 
-```powershell
+```bash
 git checkout -b chore/project-setup
 claude
 ```
 
-**Auftrag** (im Plan-Modus):
+**Auftrag** (im Plan-Modus, Shift+Tab):
 
 ```
 Lies CLAUDE.md, docs/PRODUCT_SHEET.md und docs/BUILD_SHEET.md. Prüfe, dass wir auf chore/project-setup sind.
@@ -99,11 +91,13 @@ flutter_secure_storage, workmanager, flutter_local_notifications, freezed, json_
 flutter_localizations, mocktail) in aktuellen stabilen Versionen. Lege die Ordnerstruktur aus BUILD_SHEET an,
 dazu ein schlankes Theme (lib/shared/design/) mit Farben, Abständen und Schriftrollen als Tokens,
 ARB-Dateien für de und en und eine leere App mit vier Tabs (Heute, Training, Essen, Daten).
-Richte flutter_lints ein, lege eine .gitattributes mit "* text=auto eol=lf" an und trage .garmin-probe/ in die .gitignore ein. Keine Fachlogik, noch kein Garmin. Danach flutter analyze, flutter test und dart test
-in packages/coach_engine. Committe und pushe nur auf chore/project-setup, dann Pull Request gegen main.
+Richte flutter_lints ein, lege eine .gitattributes mit "* text=auto eol=lf" an und trage .garmin-probe/ in die .gitignore ein.
+Keine Fachlogik, noch kein Garmin. Danach flutter analyze, flutter test und dart test in packages/coach_engine.
+Prüfe, dass pod install in ios/ durchläuft und die App im iOS-Simulator baut.
+Committe und pushe nur auf chore/project-setup, dann Pull Request gegen main mit gh pr create.
 ```
 
-**Fertig, wenn** `flutter analyze` ohne Meldung läuft, alle Tests grün sind und die App auf dem Mac im iOS-Simulator mit vier leeren Tabs startet (`open -a Simulator`, dann `flutter run`). Pull Request mergen.
+**Fertig, wenn** `flutter analyze` ohne Meldung läuft, alle Tests grün sind und die App im iOS-Simulator mit vier leeren Tabs startet (`open -a Simulator`, dann `flutter run`). Pull Request mergen.
 
 ## Projektstruktur
 
@@ -159,7 +153,7 @@ Der Inhalt liegt als `CLAUDE.md` im Hauptverzeichnis. Claude Code liest ihn bei 
 
 **Ergebnis:** Deine Garmin-Daten der letzten 60 Tage liegen lokal in der App, mit Bestandsaufnahme, Aktualisieren und Trennen. Branch: `feature/garmin-data`, ein Pull Request am Ende des Meilensteins.
 
-```powershell
+```bash
 git checkout main
 git pull
 git checkout -b feature/garmin-data
@@ -207,18 +201,17 @@ Schreibe tool/garmin_probe.dart (Key aus GARMIN_PERSONAL_API_KEY, pro Endpunkt d
 "Key: n Zeichen", nie Key, Token oder Inhalte; Fehler pro Endpunkt protokollieren und weitermachen)
 und tool/garmin_anonymize.dart (IDs, UUIDs, Gerätekennungen konsistent ersetzen, Namen, Texte, GPS,
 Zeitzone und Altersgruppe neutralisieren, Daten um ganze Wochen verschieben, bei Leck nichts schreiben,
-am Ende verbliebene Textfelder auflisten). Lies .garmin-probe/ nie. Gib mir die PowerShell-Befehle.
+am Ende verbliebene Textfelder auflisten). Lies .garmin-probe/ nie. Gib mir die Befehle für das Terminal (zsh).
 ```
 
-**Du dann** in einem **separaten** PowerShell-Fenster (dort nie `claude` starten):
+**Du dann** in einem **separaten** Terminal-Fenster (dort nie `claude` starten):
 
-```powershell
-cd C:\Users\jonas\Projekte\coach_app
-$sec = Read-Host "Garmin API-Key" -AsSecureString
-$env:GARMIN_PERSONAL_API_KEY = [System.Net.NetworkCredential]::new('', $sec).Password
-Remove-Variable sec
+```bash
+cd ~/Projekte/coach_app
+read -rs "GARMIN_PERSONAL_API_KEY?Garmin API-Key: "; echo
+export GARMIN_PERSONAL_API_KEY
 dart run tool/garmin_probe.dart
-Remove-Item Env:GARMIN_PERSONAL_API_KEY
+unset GARMIN_PERSONAL_API_KEY
 dart run tool/garmin_anonymize.dart
 ```
 
@@ -356,7 +349,7 @@ Pull Request für feature/coach-engine.
 
 ### 2.7 Oberfläche Coach
 
-```powershell
+```bash
 git checkout main
 git pull
 git checkout -b feature/coach-ui
@@ -477,15 +470,12 @@ Pull Request für feature/meal-plan.
 
 ## Testen auf dem iPhone und Alltag
 
-Am Ende jedes Meilensteins kommt die App per MacBook auf dein iPhone. Die ausführliche Anleitung steht in „nola: App auf Mac und iPhone testen“ (https://claude.ai/artifact/QvmF7Afm8afspaeqyjnM1E) und gilt hier genauso, nur mit dem neuen Repo.
+Am Ende jedes Meilensteins kommt die App auf dein iPhone. Die ausführliche Anleitung steht in „nola: App auf Mac und iPhone testen“ (https://claude.ai/artifact/QvmF7Afm8afspaeqyjnM1E) und gilt hier genauso, nur mit dem neuen Repo.
 
-**Kurzfassung auf dem Mac**
+**Kurzfassung**
 
 ```bash
-cd ~/Projekte
-git clone https://github.com/<dein-konto>/coach_app.git   # nur beim ersten Mal
-cd coach_app
-git fetch
+cd ~/Projekte/coach_app
 git checkout <branch>        # z. B. feature/garmin-data, nach dem Merge main
 git pull
 flutter pub get
@@ -495,8 +485,8 @@ flutter run --release                         # echtes iPhone per Kabel
 ```
 
 - Signierung in Xcode (`ios/Runner.xcworkspace` → Signing & Capabilities) mit deinem Apple-Developer-Team. Die Bundle-ID ist neu, es gibt keinen Konflikt mit nola.
+- Die Team-Einstellung ändert `ios/Runner.xcodeproj`. Diese Änderung einmal als eigenen kleinen Commit über einen Pull Request festhalten, nicht nebenbei in einem Feature-Commit.
 - Den Garmin-Key über den Passwortmanager aufs iPhone bringen, nie per Mail oder Messenger.
-- Auf dem Mac nichts committen, Xcode-Änderungen liegen lassen.
 
 **Vom Test zum Alltag**
 
@@ -531,21 +521,20 @@ flutter run --release                         # echtes iPhone per Kabel
 
 ## Häufige Probleme
 
-Alle diese Probleme sind bei der nola-Garmin-Integration schon einmal aufgetreten.
+Die meisten dieser Probleme sind bei der nola-Garmin-Integration schon einmal aufgetreten.
 
 | Problem | Ursache | Lösung |
 | --- | --- | --- |
-| `flutter` wird nicht gefunden | Terminal wurde vor der Installation geöffnet | Windows Terminal komplett schließen (alle Tabs) und neu öffnen, dann `claude --continue` |
-| „GARMIN_PERSONAL_API_KEY ist nicht gesetzt“ | nach `Read-Host` die zweite Zeile vergessen | `$env:GARMIN_PERSONAL_API_KEY = [System.Net.NetworkCredential]::new('', $sec).Password` ausführen |
+| `flutter` oder `gh` wird nicht gefunden | Terminal war vor der Installation offen oder der PATH-Eintrag in `~/.zshrc` fehlt | Terminal-Fenster schließen und neu öffnen (oder `source ~/.zshrc`), dann `claude --continue` |
+| `gh` meldet „not logged in“ | GitHub CLI nicht angemeldet | `gh auth login` |
+| „GARMIN_PERSONAL_API_KEY ist nicht gesetzt“ | nach `read` das `export` vergessen | `export GARMIN_PERSONAL_API_KEY` ausführen |
 | Token-Tausch liefert 404 | Key gelöscht, verwechselt oder unvollständig | in Garmin Connect alle Keys löschen, einen neuen erstellen, sofort im Passwortmanager speichern |
 | Anonymisierung: „Mögliche Lecks gefunden“ | unbekanntes ID-Feld in den Rohdaten | den gemeldeten Feldnamen an Claude Code geben, das Skript erweitern lassen, nur die Anonymisierung neu starten |
 | Weniger Fixtures als Endpunkte | Probe-Abruf lief nicht oder brach ab | Probe-Ausgabe prüfen („Fertig: N Abrufe, davon M mit 200“), Ablauf komplett wiederholen |
-| Claude Code sieht nur „[Ausgabe einfügen]“ | Platzhalter statt echter Ausgabe mitgeschickt | Ausgabe im Terminal markieren, Strg+C, in die Nachricht einfügen |
+| Claude Code sieht nur „[Ausgabe einfügen]“ | Platzhalter statt echter Ausgabe mitgeschickt | Ausgabe im Terminal markieren, Cmd+C, in die Nachricht einfügen |
 | Claude Code fragt, ob eingefügter Text deine Anweisung ist | lange eingefügte Nachricht ohne eigene Zeile | Nachricht mit „Das sind meine Anweisungen:“ beginnen |
 | „Login expired“ oder Nutzungslimit | Sitzung abgelaufen | `/login`, später mit `claude --continue` weitermachen; nicht committete Dateien bleiben erhalten |
-| Tests mit Prüfsummen schlagen nur unter Windows fehl | Windows schreibt Zeilenenden als CRLF | in Schritt 0 eine `.gitattributes` mit `* text=auto eol=lf` anlegen lassen |
-| Golden-Tests weichen unter Windows ab | Schriften werden auf Windows anders gezeichnet | Golden-Tests nur auf dem Mac erzeugen und prüfen |
-| Worktree scheitert an Pfadlänge | Windows-Pfadlimit | `git config core.longpaths true` nur für dieses Repo |
+| `pod install` schlägt fehl | CocoaPods fehlt oder ist veraltet, oder ein Plugin braucht eine höhere iOS-Mindestversion | `brew install cocoapods` bzw. `pod repo update`; bei Versionsfehlern die Meldung an Claude Code geben und das Deployment Target in `ios/Podfile` anpassen lassen |
 | Xcode meldet Fehler zu Team oder Bundle-ID | Signierung nicht eingerichtet | in Xcode unter Settings → Accounts die Apple-ID hinzufügen und das Team wählen |
 | App startet nach einer Woche nicht mehr | kostenlose Apple-ID, 7 Tage Laufzeit | neu installieren oder Apple Developer Program nutzen |
 | Nachtdaten fehlen am Morgen | Uhr hat noch nicht über Garmin Connect synchronisiert | Garmin Connect kurz öffnen, dann in der App aktualisieren |
